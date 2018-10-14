@@ -19,23 +19,22 @@ import java.util.ArrayList;
 public class MetodosImagen{
 
     /**
-    * Método para cargar una imágen en un objeto de tipo <tt>BufferedImage<tt>.
+    * Método para cargar una imágen en un objeto de tipo BufferedImage.
     * @param imagen la imágen que será cargada del usuario.
-    * @return El objeto <tt>BufferedImage<tt> con la información de la imagen.
-    * @throws IOException si ocurre un error al leer el arhivo.
+    * @return El objeto BufferedImage con la información de la imagen.
     */
     public static BufferedImage cargaImagen(String imagen) {
 	    try {
 	        File file = new File(imagen);
 	        BufferedImage in = ImageIO.read(file);
-	        BufferedImage newImage = new BufferedImage(
+	        BufferedImage imagenNueva = new BufferedImage(
 	                in.getWidth(), in.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
-	        Graphics2D g = newImage.createGraphics();
+	        Graphics2D g = imagenNueva.createGraphics();
 	        g.drawImage(in, 0, 0, null);
 	        g.dispose();
 
-	        return newImage;
+	        return imagenNueva;
 	    } catch (IOException e) {
 	        System.err.println("Error al leer la imágen.");
 	        e.printStackTrace();
@@ -48,13 +47,12 @@ public class MetodosImagen{
     * Guarda un BufferedImage a un .png en la ubicación del programa.
 	* @param imagen la imagen a ser guardada.
 	* @param nombreImagen el nombre de la imagen a ser guardada.
-    * @throws IOException si ocurre un error al leer el arhivo.
  	*/
     public void guardaImagen(BufferedImage imagen, String nombreImagen) {
         try {
-            File output = new File(nombreImagen);
+            File output = new File(nombreImagen + ".png");
             ImageIO.write(imagen, "png", output);
-            System.out.println("Imagen guardada en: " + output.getAbsolutePath());
+            System.out.println("Imagen guardada exitosamente en: " + output.getAbsolutePath());
         } catch (IOException e) {
             System.err.println("No pude guardar el archivo png.");
             e.printStackTrace();
@@ -85,9 +83,16 @@ public class MetodosImagen{
         return Integer.toBinaryString(decimal);
     }
 
+    private String fillString(String input) {
+        for (int i = input.length(); i < 8; i++)
+            input = "0" + input;
+
+        return input;
+    }
+
 	/**
-    * Obtiene los últimos dos bits del canl rojo, verde, azul y alfa.
-    * dado un <tt>ArrayList<tt> que contiene los valores de 8 bits de estos canales
+    * Obtiene los últimos dos bits del canal rojo, verde, azul y alfa.
+    * dado un ArrayList que contiene los valores de 8 bits de estos canales
     * como una cadena binaria. 
     * @param rgba Las cadenas binarias de un pixel (Rojo, verde, azul, alfa).
     * @return Una cadena concatenada de los últimos dos bits de cada canal.
