@@ -1,4 +1,4 @@
-package fciencias.myp2019;
+ package fciencias.myp2019;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -23,8 +23,8 @@ public class Esteganografo{
 	MetodosTxt txtMet = new MetodosTxt();
 
 	/**
-	* Esconde el mensaje de tipo <tt>String<tt> en una imágen ya cargada de
-	* tipo <tt>BufferedImage<tt> y luego de ejecutar el algorítmo actualiza
+	* Esconde el mensaje de tipo String en una imágen ya cargada de
+	* tipo BufferedImage y luego de ejecutar el algorítmo actualiza
 	* los valores de la imágen.
 	* @param mensaje El mensaje a ser escondido en la imágen.
 	* @param imagen La imágen a ser utilizada para esconder nuestro texto.
@@ -33,6 +33,7 @@ public class Esteganografo{
 	public void escondeMensaje(String mensaje, BufferedImage imagen, String nombreImg){
 		//Convertimos el mensaje a binario.
 		String mensajeBinario = txtMet.convierteCadenaABinario(mensaje);
+
 		//Indica si ya terminamos de esconder el mensaje.
 		Boolean bloqueFinal = false;
 
@@ -68,8 +69,7 @@ public class Esteganografo{
 
 				// Hacemos la modificación de los colores en base a nuestra cadena binaria.
 				for (int i = 0; i < rgbaOriginal.size(); i++){
-					rgbaActualizado.add(rgbaOriginal.get(i).substring(0, 6) + 
-						bloqueMensaje.substring(i * 2, (i + 1) * 2));
+					rgbaActualizado.add(rgbaOriginal.get(i).substring(0, 6) + bloqueMensaje.substring(i * 2, (i + 1) * 2));
 				}
 
 				// Convertimos nuestro arreglo a uno en decimal para actualizar la imágen.
@@ -86,7 +86,7 @@ public class Esteganografo{
 			}
 		}
 		// Guardamos la imagen con el nombre que nos da el usuario.
-		imgMet.guardaImagen(imagen, nombreImg + ".png");
+		imgMet.guardaImagen(imagen, nombreImg);
 	}
 
 	/**
@@ -116,9 +116,9 @@ public class Esteganografo{
                 }
             }
         }
-
+        System.out.println("Obtuve el texto escondido");
         System.out.println(textoEscondido);
-        txtMet.escribeTxt(textoEscondido, nombreTxt + ".txt");
+        txtMet.escribeTxt(textoEscondido, nombreTxt);
 	}
 
 } 
