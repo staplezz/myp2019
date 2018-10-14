@@ -22,8 +22,7 @@ public class MetodosTxt{
     * Método para leer y devolver la información que contiene un archivo txt.
     * @param archivoTxt la ubicación del archivo en formato txt.
     * @return La cadena con la información del archivo txt.
-    * @throws UnsupportedEncodingException ocurre un error de encodificación.
-    * @throws IOException si ocurre un error al leer el arhivo.
+    //cambia
     */
     public String leeTxt(String archivoTxt) {
         String cadenaTxt = "";
@@ -61,8 +60,6 @@ public class MetodosTxt{
     * Método para escribir un archivo en formato txt.
     * @param archivoAEscribir La cadena con la información a escribir.
     * @param nombreDelArchivo El nombre que se le dará al archivo.
-    * @throws UnsupportedEncodingException ocurre un error de encodificación.
-    * @throws IOException si ocurre un error al leer el arhivo.
     */
 	void escribeTxt(String archivoAEscribir, String nombreDelArchivo){
         try {
@@ -70,6 +67,7 @@ public class MetodosTxt{
             Writer out = new BufferedWriter(new OutputStreamWriter(
             new FileOutputStream(fileDir), "UTF8"));
             out.append(archivoAEscribir);
+            System.out.println("Archivo guardado exitosamente en: " + fileDir.getAbsolutePath());
             out.flush();
             out.close();
 
@@ -95,15 +93,15 @@ public class MetodosTxt{
     public String convierteCadenaABinario(String input) {
         String cadena8bits = "";
         byte[] bytes = input.getBytes();
-        StringBuilder binary = new StringBuilder();
+        StringBuilder binario = new StringBuilder();
         for (byte b : bytes) {
             int val = b;
             for (int i = 0; i < 8; i++) {
-                binary.append((val & 128) == 0 ? 0 : 1);
+                binario.append((val & 128) == 0 ? 0 : 1);
                 val <<= 1;
             }
         }
-        cadena8bits += binary.toString();
+        cadena8bits += binario.toString();
         return cadena8bits;
     }
 
