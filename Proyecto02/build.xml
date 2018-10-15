@@ -24,7 +24,7 @@
            includeantruntime="false"
            deprecation="true"
            nowarn="off">
-      <compilerarg value="-Xlint:unchecked"/>
+      <compilerarg value="-Xlint"/>
     </javac>
   </target>
 
@@ -35,7 +35,7 @@
              defaultexcludes="yes"
              destdir="${doc.dir}"
              charset="UTF-8"
-             author="false"
+             author="true"
              version="false"
              use="true"
              windowtitle="Modelado Y Programación">
