@@ -1,8 +1,16 @@
 package fciencias.myp2019;
 
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.io.OutputStreamWriter;
+import java.util.Arrays;
 
 /**
 * @author Jorge Francisco Cortes Lopez.
@@ -10,87 +18,99 @@ import java.util.ArrayList;
 */
 
 /**
-* <p>Clase principal para pedir al usuario la imágen y el texto</p>
+* <p>Implementamos diversos métodos para usar en nuestro estenógrafo como:
+* leer un archivo txt que nos dará el usuario, escribir un archivo txt para
+* cuando volvamos a obtener la información, convertir una cadena a binario,
+* y otros métodos que nos serán de utilidad.</p>
 */
-public class Proyecto02{
 
-    public static void main(String[] args) {
+public class MetodosTexto {
 
-        Esteganografo esteganografo = new Esteganografo();
-
-        String archivoTexto = "";
-        String nombreTexto = "";
-        String nombreImagenSaliente = "";
-        BufferedImage imagenFuente = null;
-
-        // Si no hay argumentos le informamos al usuario que lea como usar el programa
-        if (args.length == 0) {
-            Proyecto02.mensajeUso();
-            System.exit(1);
-        }
-
-        if (!args[0].equals("-h") && !args[0].equals("-u") ){
-            Proyecto02.mensajeUso();
-            System.exit(1);
-        }
-
-        // Opción ocultar
-        if(args[0].equals("-h")){
-            MetodosTexto metodosTexto = new MetodosTexto();
-
-            if(args.length != 4){
-                Proyecto02.mensajeUso();
-                System.exit(1);
+    /**
+    * Método para leer y devolver la información que contiene un archivo txt.
+    * @param archivoTxt la ubicación del archivo en formato txt.
+    * @return La cadena con la información del archivo txt.
+    */
+    public String cargaTxt(String archivoTxt) {
+        String cadenaTxt = "";
+        try {
+            File txt = new File(archivoTxt);
+            
+            BufferedReader in = new BufferedReader(
+                new InputStreamReader(
+                    new FileInputStream(txt), "UTF8"));
+                
+            String str;
+             
+            while ((str = in.readLine()) != null) {
+                cadenaTxt += str + " ";
             }
-
-            BufferedImage imagenSalida = null;
-            archivoTexto = metodosTexto.cargaTxt(args[1]);
-            imagenFuente = MetodosImagen.cargaImagen(args[2]);
-            nombreImagenSaliente = args[3];
-            try{
-                imagenSalida = 
-                esteganografo.escondeMensaje(archivoTexto, imagenFuente);
-            } catch (Exception e){
-                System.out.println("Ocurrio un error al ocultar el mensaje.");
-            }
-            MetodosImagen.guardaImagen(imagenSalida, nombreImagenSaliente);
-            System.out.println("Imagen guardada exitosamente");
+            in.close();
+            return cadenaTxt;        
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error al cargar el archivo de texto.");
         }
-
-        // Opción develar
-        if(args[0].equals("-u")){
-
-            if(args.length != 3){
-                Proyecto02.mensajeUso();
-                System.exit(1);
-            }
-
-            String textoEscondido = "";
-            imagenFuente = MetodosImagen.cargaImagen(args[1]);
-            nombreTexto = args[2];
-            try{
-                textoEscondido = esteganografo.getTextoDeImagen(imagenFuente);
-            } catch (Exception e) {
-                System.out.println("Ocurrió un error al develar tu imágen.");
-            }
-            MetodosTexto.guardaTxt(textoEscondido, nombreTexto);
-            System.out.println("Archivo guardado exitosamente");
-        }
-
-        System.out.println("Gracias por usar el programa.");
-        System.exit(0);
+        return cadenaTxt;
     }
 
-    //Instrucciones para uso del programa si ocurre algún error.
-        static void mensajeUso(){
-            System.out.println("Uso:");
-            System.out.println("Para ocultar texto en una imagen:");
-            System.out.println("java -jar Proyecto02 -jar -h <textoAOcultar.txt>" +
-            "<imagenAUsar.png/jpg...> <imagenResultante>");
-            System.out.println("Para develar texto de una imagen:");
-            System.out.println("java -jar Proyecto02 -jar -u <imagenADevelar.png>" +
-            "<archivoAGuardar.txt>");
-            System.out.println("Ejemplo: " + "Proyecto02 -h quijote.txt" +
-                "gatitos.png aquinohaynada.png");
+    /**
+    * Método para escribir un archivo en formato txt.
+    * @param archivoAEscribir La cadena con la información a escribir.
+    * @param nombreDelArchivo El nombre que se le dará al archivo.
+    */
+    public static void guardaTxt(String archivoAEscribir, 
+        String nombreDelArchivo) {
+        try {
+            File fileDir = new File(nombreDelArchivo);
+            Writer out = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream(fileDir), "UTF8"));
+            out.append(archivoAEscribir);
+            out.flush();
+            out.close();
+
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error al guardar el archivo de texto");
+        } 
+    }
+
+    /**
+    * Convierte una cadena de caracteres a una cadena con valores binarios.
+    * @param input La cadena a ser convertida.
+    * @return La cadena que contiene los valores binarios de la cadena dada.
+    */
+    public String convierteCadenaABinario(String input) {
+        String cadena8bits = "";
+        byte[] bytes = input.getBytes();
+        StringBuilder binario = new StringBuilder();
+        for (byte b : bytes) {
+            int val = b;
+            for (int i = 0; i < 8; i++) {
+                binario.append((val & 128) == 0 ? 0 : 1);
+                val <<= 1;
+            }
         }
+        cadena8bits += binario.toString();
+        return cadena8bits;
+    }
+
+    /**
+    * Convierte una cadena binaria a una en texto.
+    * Usamos el método de clase split que recibe un regex
+    * en donde (?<=\\G.{8}) en donde con "?<=" recorre la cadena
+    * y si "G.{8}" sucede, es decir, recorre 8 caracteres, entonces
+    * divide la cadena en 8 caracteres y a cada uno le aplica el
+    * método "parseInt" que convierte el binario en caracter y luego
+    * lo junta caracter con caracter en nuestro objeto StringBuilder,
+    * finalmente lo convertimos a String para poder ser regresado.
+    * @param cadena La cadena a ser convertida.
+    * @return La cadena convertida a texto.
+    */
+    String binarioAString(String cadena) {
+        StringBuilder sb = new StringBuilder();
+        Arrays.stream(cadena.split("(?<=\\G.{8})")).forEach
+        (s -> sb.append((char) Integer.parseInt(s, 2)));
+        String output = sb.toString();
+        return output;
+    }
+    
 }
